@@ -81,7 +81,7 @@ Adding an app container instance to a NixOS configuration
 This package also offers a NixOS module that automatically launches a running
 app container:
 
-``nix
+```nix
 {pkgs, ...}:
 
 {

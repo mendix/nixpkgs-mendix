@@ -8,7 +8,7 @@ let
   extraArgs = builtins.removeAttrs args [ "app" ];
 in
 stdenv.mkDerivation ({
-  name = "run-mendix-app-${app.name}";
+  name = "run-mendix-app${if builtins.isAttrs app then "-${app.name}" else ""}";
   buildCommand = ''
     mkdir -p $out/bin
     cat > $out/bin/start-appcontainer <<EOF

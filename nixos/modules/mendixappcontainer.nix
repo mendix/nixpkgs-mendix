@@ -77,7 +77,6 @@ in
       };
 
       app = mkOption {
-        type = types.package;
         description = "Mendix MDA to deploy";
       };
 
@@ -131,7 +130,7 @@ in
         };
 
         runScripts = mendixPkgs.runMendixApp {
-          inherit (cfg) app;
+          inherit (cfg) app mendixVersion;
         };
       in
       {

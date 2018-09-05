@@ -80,6 +80,11 @@ in
         description = "Mendix MDA to deploy";
       };
 
+      applicationRootURL = mkOption {
+        description = "Application root URL will be used when generating wsdl documentation on the fly at /ws-doc/";
+        default = null;
+      };
+
       stateDir = mkOption {
         type = types.string;
         default = "/home/mendix";
@@ -90,6 +95,22 @@ in
         type = types.string;
         default = null;
         description = "Specifies the version of the Mendix runtime to use. When set to null, the used version is identical to the mxbuild version used to compile the MDA.";
+      };
+
+      constants = mkOption {
+        type = types.attrs;
+        default = {};
+        description = "An attribute set that overrides the default values of microflow constants.";
+      };
+
+      adminAccountUsername = mkOption {
+        default = null;
+        description = "Name of the administration account to create";
+      };
+
+      adminAccountPassword = mkOption {
+        default = null;
+        description = "Password of the administrator account to create";
       };
     };
   };
@@ -126,7 +147,14 @@ in
             DatabaseHost = "127.0.0.1:${toString config.services.postgresql.port}";
             DatabaseUserName = cfg.databaseUsername;
             DatabasePassword = cfg.databasePassword;
+          } // lib.optionalAttrs (cfg.applicationRootURL != null) {
+            ApplicationRootUrl = cfg.applicationRootURL;
           });
+        };
+
+        constantsJSON = pkgs.writeTextFile {
+          name = "constants.json";
+          text = builtins.toJSON (cfg.constants);
         };
 
         runScripts = mendixPkgs.runMendixApp {
@@ -143,6 +171,8 @@ in
           M2EE_ADMIN_PASS = cfg.adminPassword;
           M2EE_ADMIN_PORT = toString cfg.adminPort;
           MENDIX_STATE_DIR = cfg.stateDir;
+          MENDIX_ADMIN_USER_NAME = cfg.adminAccountUsername;
+          MENDIX_ADMIN_USER_PASSWORD = cfg.adminAccountPassword;
         };
 
         serviceConfig = {
@@ -150,7 +180,7 @@ in
           Group = "mendix";
           ExecStartPre = "${runScripts}/bin/undeploy-app";
           ExecStart = "${runScripts}/bin/start-appcontainer";
-          ExecStartPost = "${runScripts}/bin/configure-appcontainer ${appContainerConfigJSON} ${configJSON}";
+          ExecStartPost = "${runScripts}/bin/configure-appcontainer ${appContainerConfigJSON} ${configJSON} ${constantsJSON}";
         };
       };
   };

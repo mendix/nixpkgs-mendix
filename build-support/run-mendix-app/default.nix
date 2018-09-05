@@ -44,9 +44,14 @@ stdenv.mkDerivation ({
 
     # Configure the running app instance to actually run
     ${nodejs}/bin/node ${./composeappcontaineraction.js} "\$1" | ${curlCmd} -d @-
-    ${nodejs}/bin/node ${./composeconfigurationaction.js} "\$2" "\$MENDIX_STATE_DIR" "$(echo ${mendixPkg}/libexec/mendix/*/runtime)" | ${curlCmd} -d @-
+    ${nodejs}/bin/node ${./composeconfigurationaction.js} "\$2" "\$3" "\$MENDIX_STATE_DIR" "$(echo ${mendixPkg}/libexec/mendix/*/runtime)" | ${curlCmd} -d @-
     ${curlCmd} -d '{ "action": "start" }'
     ${curlCmd} -d '{ "action": "execute_ddl_commands" }'
+    if [ "\$MENDIX_ADMIN_USER_NAME" != "" ]
+    then
+        ${curlCmd} -d '{ "action": "create_admin_user", "params": { "password": "'"\$MENDIX_ADMIN_USER_PASSWORD"'" } }'
+        ${curlCmd} -d '{ "action": "update_admin_user", "params": { "username": "'"\$MENDIX_ADMIN_USER_NAME"'", "password": "'"\$MENDIX_ADMIN_USER_PASSWORD"'" } }'
+    fi
     ${curlCmd} -d '{ "action": "start" }'
     EOF
     chmod +x $out/bin/configure-appcontainer

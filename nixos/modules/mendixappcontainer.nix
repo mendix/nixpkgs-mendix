@@ -81,6 +81,7 @@ in
       };
 
       applicationRootURL = mkOption {
+        type = types.nullOr types.string;
         description = "Application root URL will be used when generating wsdl documentation on the fly at /ws-doc/";
         default = null;
       };
@@ -92,7 +93,7 @@ in
       };
 
       mendixVersion = mkOption {
-        type = types.string;
+        type = types.nullOr types.string;
         default = null;
         description = "Specifies the version of the Mendix runtime to use. When set to null, the used version is identical to the mxbuild version used to compile the MDA.";
       };
@@ -104,11 +105,13 @@ in
       };
 
       adminAccountUsername = mkOption {
+        type = types.nullOr types.string;
         default = null;
         description = "Name of the administration account to create";
       };
 
       adminAccountPassword = mkOption {
+        type = types.nullOr types.string;
         default = null;
         description = "Password of the administrator account to create";
       };

@@ -112,10 +112,11 @@ are supported.
 
 Mendix versions supported
 =========================
-Currently, only two Mendix runtime versions are supported:
+Currently, the following Mendix runtime versions are supported:
 
 * 6.10.10
 * 7.13.1
+* 7.17.2
 
 License
 =======

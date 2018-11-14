@@ -10,6 +10,7 @@ let
       "6.10.10" = callPackage ../pkgs/mendix/6.10.10.nix { };
       "7.13.1" = callPackage ../pkgs/mendix/7.13.1.nix { };
       "7.17.2" = callPackage ../pkgs/mendix/7.17.2.nix { };
+      "7.20.0.41900" = callPackage ../pkgs/mendix/7.20.0.41900.nix { };
     };
 
     mxbuild = {
@@ -20,6 +21,9 @@ let
         mono = pkgs.mono46;
       };
       "7.17.2" = callPackage ../pkgs/mxbuild/7.17.2.nix {
+        mono = pkgs.mono46;
+      };
+      "7.20.0.41900" = callPackage ../pkgs/mxbuild/7.20.0.41900.nix {
         mono = pkgs.mono46;
       };
     };
